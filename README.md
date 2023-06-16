@@ -8,7 +8,7 @@ Our work for ECE4720J in SU 2023.!
 
 + Professor: Manuel Charlemagne
 + Semester: 2023SU
-+ Acknowledgement: Great thanks to the Professor, TAs (Weili Shi, Kaiwen Zhang && Yuxuan Zheng), our coding group(Jiache Zhang, Kezhi Li, Shaoze Yang, Yinchen Ni), and people who helped us.
++ Acknowledgement: Great thanks to the Professor, TAs ([Weili Shi](https://github.com/WillyKidd), [Kaiwen Zhang](https://github.com/Kevin-ZhangClutchit) && Yuxuan Zheng), our coding group([Jiache Zhang](https://github.com/17876zjc), [Kezhi Li](https://github.com/little-black-sjtu), [Shaoze Yang](https://github.com/priest-yang), [Yinchen Ni](https://github.com/hamham223)), and people who helped us.
 + Remarks: The solutions provided are not guarantee to be 100% correct, please be aware when referencing.
 
 ### Course Comment
