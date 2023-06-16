@@ -1,0 +1,119 @@
+create table name
+(
+nconst varchar(10) not null,
+primaryName text not null,
+birthYear varchar(4) not null,
+deathYear varchar(4) not null,
+primaryProfession text not null,
+knownForTitles text not null,
+primary key(nconst)
+);
+
+
+
+create table akas
+(
+titleId text not null,
+ordering INT not null,
+title text not null,
+region varchar(3) not null,
+language varchar(3) not null,
+types text not null,
+attributes text not null,
+isOriginalTitle BOOL not null
+);
+
+
+create table basics
+(
+tconst varchar(10) not null,
+titleType text not null,
+primaryTitle text not null,
+originalTitle text not null,
+isAdult BOOL not null,
+startYear varchar(4) not null,
+endYear varchar(4) not null,
+runtimeMinutes INT not null,
+genres text not null,
+primary key(tconst)
+);
+
+create table crew
+(
+tconst varchar(10) not null,
+directors text not null,
+writers text not null,
+primary key(tconst)
+);
+
+
+create table episode
+(
+    tconst varchar(10) not null,
+    parentTconst varchar(10) not null,
+    seasonNumber INT not null,
+    episodeNumber INT not null,
+    primary key(tconst)
+);
+
+create table principals
+(
+    tconst varchar(10) not null,
+    ordering INT not null,
+    nconst varchar(10) not null,
+    category text not null,
+    job text not null,
+    characters text not null
+);
+
+create table ratings
+(
+    tconst varchar(10) not null,
+    averageRating FLOAT not null,
+    numVotes INT not null,
+    primary key(tconst)
+);
+
+SELECT *
+FROM basics
+WHERE
+titleType = "movie"
+AND runtimeMinutes <> "\N"
+AND runtimeMinutes = (SELECT MAX(runtimeMinutes) FROM basics WHERE titleType = "movie" AND runtimeMinutes <> "\N");
+
+
+SELECT *
+FROM basics
+WHERE
+titleType = "movie"
+AND runtimeMinutes <> "\N" AND startYear = 2009
+AND runtimeMinutes = (SELECT MAX(runtimeMinutes) FROM basics WHERE titleType = "movie" AND runtimeMinutes <> "\N" AND startYear = 2009);
+
+
+SELECT primaryName FROM name
+WHERE nconst = 
+(SELECT nconst
+FROM 
+(SELECT * 
+FROM principals RIGHT JOIN
+basics ON principals.tconst = basics.tconst 
+WHERE basics.titleType = 'movie') 
+GROUP BY nconst
+ORDER BY COUNT(nconst) DESC LIMIT 1);
+
+
+
+SELECT * FROM crew
+WHERE tconst = 
+(
+SELECT tconst FROM
+    (
+        SELECT ratings.* FROM
+        ratings RIGHT JOIN 
+        basics ON ratings.tconst = basics.tconst 
+        WHERE basics.titleType = 'movie'
+    )
+WHERE
+numVotes > 500
+ORDER BY averageRating DESC LIMIT 1
+);
