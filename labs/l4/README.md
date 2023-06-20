@@ -1,4 +1,9 @@
+# ECE4720J Lab 4
+
+> Author: :car::crossed_swords::hamster::palm_tree:
+
 ### Ex. 2 — Simple Drill queries
+
 2) Determine the name of the student who had the
 a) Lowest grade;
 ```sqlite
@@ -42,4 +47,33 @@ select (cast(grade as int)) as median from ( select grade, ROW_NUMBER() over (or
 1 row selected (112.286 seconds)
 
 ```
+
+### Ex. 3 Simple Spark
+
++ pyspark `map` `reduce` example:
+
+```python
+from pyspark.context import SparkContext
+
+sc = SparkContext()
+name = "./small_file.csv"
+textFile = sc.textFile(name)
+grades = textFile.flatMap(lambda x: [x.split(",")[0], int(x.split(",")[1])])
+grades = textFile.map(lambda x: (x.split(",")[0], int(x.split(",")[1])))
+maxGrade = grades.reduceByKey(lambda a, b:max(a,b))
+maxGrade.saveAsTextFile()
+```
+
++ `spark-submit` command
+
+```bash
+spark-submit \
+--master yarn \
+--deploy-mode cluster \
+--conf spark.pyspark.driver.python=python3 \
+--conf spark.pyspark.python=python3 \
+ex3.py -n <size>
+```
+
+`<size> ` can be `10k`, `20k`,`50k`,`100k`,...
 
