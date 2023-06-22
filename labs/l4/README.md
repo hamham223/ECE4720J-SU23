@@ -50,18 +50,28 @@ select (cast(grade as int)) as median from ( select grade, ROW_NUMBER() over (or
 
 ### Ex. 3 Simple Spark
 
-+ pyspark `map` `reduce` example:
++ pyspark `map` `reduce` example: (see [.ex3.py](./ex3.py))
 
 ```python
 from pyspark.context import SparkContext
+from argparse import ArgumentParser
 
+def parse_args(description):
+    parser = ArgumentParser(description=description)
+    parser.add_argument("-n", type=str, default="50k",
+                        required=True, help="The filename")
+    args = parser.parse_args()
+    return args
+
+args = parse_args("VE472 Lab4")
+filename = args.n
 sc = SparkContext()
-name = "./small_file.csv"
+name = "hdfs://hadoop-master:9000/records_"+filename+".csv"
 textFile = sc.textFile(name)
-grades = textFile.flatMap(lambda x: [x.split(",")[0], int(x.split(",")[1])])
-grades = textFile.map(lambda x: (x.split(",")[0], int(x.split(",")[1])))
-maxGrade = grades.reduceByKey(lambda a, b:max(a,b))
-maxGrade.saveAsTextFile()
+#grades = textFile.flatMap(lambda x: [x.split(",")[0], int(x.split(",")[1])])
+grades = textFile.map(lambda x: (x.split(",")[0], int(x.split(",")[2])))
+maxGrade = grades.reduceByKey(lambda a,b:max(a,b))
+maxGrade.saveAsTextFile("hdfs://hadoop-master:9000/lab4_"+filename)
 ```
 
 + `spark-submit` command
@@ -77,3 +87,6 @@ ex3.py -n <size>
 
 `<size> ` can be `10k`, `20k`,`50k`,`100k`,...
 
++ result:
+
+  ![](./plot.png)
